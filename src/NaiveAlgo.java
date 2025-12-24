@@ -5,7 +5,7 @@ class NaiveAlgo {
 	long cpt = 0;
 	
 	void principal() {
-		//testGenerateRandomText();
+		testGenerateRandomText();
 		//testGenerateRepetitiveText();
 		testNaiveAlgo();
 		testNaiveAlgoEfficiency();
@@ -236,16 +236,73 @@ class NaiveAlgo {
 	 * @return ArrayList<Character> - The generated random text containing characters from 'A' to 'Z'.
 	 */
 	ArrayList<Character> generateRandomText(int size) {
-        ArrayList<Character> text = new ArrayList<>(size);
-        String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
-        
-        for (int i = 0; i < size; i++) {
-            int index = (int)(Math.random() * alphabet.length());
-            text.add(alphabet.charAt(index));
-        }
+		ArrayList<Character> text = null;
+		
+		if (size >= 0) {
+			text = new ArrayList<>(size);
+			String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+			
+			for (int i = 0; i < size; i++) {
+				int index = (int)(Math.random() * alphabet.length());
+				text.add(alphabet.charAt(index));
+			}
+		} else {
+			System.err.println("generateRandomText(): Error: size negative");
+		}
+		
         return text;
     }
     
+    void testGenerateRandomText() {
+		System.out.println("\n--- Test of generateRandomText() ---");
+
+		int size;
+		
+		System.out.println("Test : Normal Case : Size positive");
+        size = 6;
+        testCasGenerateRepetitiveText(size);
+        
+        System.out.println("Test : Limit Case : Size equals zero");
+        size = 0;
+        testCasGenerateRepetitiveText(size);
+        
+        System.out.println("Test : Limit Case : Huge Size (will not be displayed)");
+        size = 10000;
+        testCasGenerateRepetitiveText(size);
+        
+        System.out.println("Test : Error Case : Negativ Size");
+        size = -5;
+        testCasGenerateRepetitiveText(size); 
+	}
+	
+	void testCasGenerateRepetitiveText(int size) {
+		ArrayList<Character> res = generateRandomText(size);
+		boolean success = false;
+		
+		if (res == null) {
+			if (size < 0) {
+				success = true;
+			} 
+		} else {
+			if (res.size() == size) {
+				success = true;
+				if (res.size() < 15) { // the goal is to display reasonable text size
+					System.out.println(res);
+				}
+			}
+		}
+		
+		if (success) {
+			System.out.println("Test successful\n");
+		} else {
+			System.err.println("Test failed\n");
+		}
+	}
+			
+		
+		
+		
+		
     /**
 	 * Generates a repetitive text of the specified size consisting only of the character 'A'.
 	 * This method is used to simulate the "worst case" scenario for the Naive algorithm
@@ -253,11 +310,18 @@ class NaiveAlgo {
 	 * @return ArrayList<Character> - The generated repetitive text filled with 'A's.
 	 */
     ArrayList<Character> generateRepetitiveText(int size) {
-        ArrayList<Character> text = new ArrayList<>(size);
-        
-        for (int i = 0; i < size; i++) {
-            text.add('A'); 
-        }
+		ArrayList<Character> text = null;
+		
+		if (size >= 0) {
+		
+			text = new ArrayList<>(size);
+			
+			for (int i = 0; i < size; i++) {
+				text.add('A'); 
+			}
+		} else {
+			System.err.println("generateRepetitiveText(): Error: size is negativ");
+		}
         return text;
     }
 }
