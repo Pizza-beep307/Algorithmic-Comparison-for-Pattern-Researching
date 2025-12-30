@@ -6,19 +6,19 @@ class NaiveAlgo {
 	
 	void principal() {
 		testGenerateRandomText();
-		//testGenerateRepetitiveText();
+		testGenerateRepetitiveText();
 		testNaiveAlgo();
 		testNaiveAlgoEfficiency();
 		
 	}
 	/**
-     * Searches for the 'pattern' in the 'text' using the Naive Algorithm.
-     * @param text - The text (ArrayList<Character>)
-     * @param pattern - The search pattern (String)
-     * @return ArrayList<Integer> - The starting indices of the matches.
-     */
+	 * Searches for the 'pattern' in the 'text' using the Naive Algorithm.
+	 * @param text - The text (ArrayList<Character>)
+	 * @param pattern - The search pattern (String)
+	 * @return ArrayList<Integer> - The starting indices of the matches, null if error.
+	 */
 	ArrayList<Integer> naiveAlgo( ArrayList<Character> text, String pattern ) {
-		cpt = 0; 
+		cpt = 0;
 		ArrayList<Integer> indices = null;
 		if (text != null) {
 			if (text.size() > 0) {
@@ -66,80 +66,80 @@ class NaiveAlgo {
 		}
 		return indices;
 	}
+	
 	/**
-     * Tests the Naive algorithm .
+     * Tests of the Naive algorithm .
      */ 
     void testNaiveAlgo() {
-        System.out.println("\n--- Test of naiveAlgo() ---");
+		System.out.println("\n--- Test of naiveAlgo() ---");
 
 		ArrayList<Character> text;
 		String pattern;
 
-        System.out.println("Test : Normal Case : single match");
-        text = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e'));
-        pattern = "c";
-        testCasNaiveAlgo(text, pattern, new ArrayList<>(Arrays.asList(3))); 
-        
+		System.out.println("Test : Normal Case : single match");
+		text = new ArrayList<>(Arrays.asList('a', 'b', 'c', 'd', 'e'));
+		pattern = "c";
+		testCasNaiveAlgo(text, pattern, new ArrayList<>(Arrays.asList(3))); 
 
-        System.out.println("Test : Normal Case : Multiple matches");
-        text = new ArrayList<>(Arrays.asList('a', 'b', 'a', 'b', 'a', 'b'));
-        pattern = "ab";
-        testCasNaiveAlgo(text, pattern, new ArrayList<>(Arrays.asList(1, 3, 5))); 
-        
-        
-        System.out.println("Test : Normal Case : No match");
-        text = new ArrayList<>(Arrays.asList('x', 'y', 'z'));
-        pattern = "a";
-        testCasNaiveAlgo(text, pattern, new ArrayList<>()); 
-        
 
-        System.out.println("Test : Limit Case : Pattern as long as the text");
-        text = new ArrayList<>(Arrays.asList('T', 'E', 'X', 'T'));
-        pattern = "TEXT";
-        testCasNaiveAlgo(text, pattern, new ArrayList<>(Arrays.asList(1)));
-            
-        
-        System.out.println("Test : Error Case : Pattern does not exist");
-        text = new ArrayList<>(Arrays.asList('T', 'E', 'X', 'T'));
-        pattern = null;
-        testCasNaiveAlgo(text, pattern, null);
-        
-        
-        System.out.println("Test : Error Case : Pattern is empty");
-        text = new ArrayList<>(Arrays.asList('T', 'E', 'X', 'T'));
-        pattern = "";
-        testCasNaiveAlgo(text, pattern, null);
-        
-        
-        System.out.println("Test : Error Case : Pattern longer than the text");
-        text = new ArrayList<>(Arrays.asList('T', 'E', 'X', 'T'));
-        pattern = "TEXTURE";
-        testCasNaiveAlgo(text, pattern, null);
-        
-        
-        System.out.println("Test : Error Case : Text does not exist");
-        text = null;
-        pattern = "srchNull";
-        testCasNaiveAlgo(text, pattern, null);
-        
-        
-        System.out.println("Test : Error Case : Text is empty");
-        text = new ArrayList<>();
-        pattern = "srchNull";
-        testCasNaiveAlgo(text, pattern, null);
-           
+		System.out.println("Test : Normal Case : Multiple matches");
+		text = new ArrayList<>(Arrays.asList('a', 'b', 'a', 'b', 'a', 'b'));
+		pattern = "ab";
+		testCasNaiveAlgo(text, pattern, new ArrayList<>(Arrays.asList(1, 3, 5))); 
+
+
+		System.out.println("Test : Normal Case : No match");
+		text = new ArrayList<>(Arrays.asList('x', 'y', 'z'));
+		pattern = "a";
+		testCasNaiveAlgo(text, pattern, new ArrayList<>()); 
+
+
+		System.out.println("Test : Limit Case : Pattern as long as the text");
+		text = new ArrayList<>(Arrays.asList('T', 'E', 'X', 'T'));
+		pattern = "TEXT";
+		testCasNaiveAlgo(text, pattern, new ArrayList<>(Arrays.asList(1)));
+
+
+		System.out.println("Test : Error Case : Pattern does not exist");
+		text = new ArrayList<>(Arrays.asList('T', 'E', 'X', 'T'));
+		pattern = null;
+		testCasNaiveAlgo(text, pattern, null);
+
+
+		System.out.println("Test : Error Case : Pattern is empty");
+		text = new ArrayList<>(Arrays.asList('T', 'E', 'X', 'T'));
+		pattern = "";
+		testCasNaiveAlgo(text, pattern, null);
+
+
+		System.out.println("Test : Error Case : Pattern longer than the text");
+		text = new ArrayList<>(Arrays.asList('T', 'E', 'X', 'T'));
+		pattern = "TEXTURE";
+		testCasNaiveAlgo(text, pattern, null);
+
+
+		System.out.println("Test : Error Case : Text does not exist");
+		text = null;
+		pattern = "srchNull";
+		testCasNaiveAlgo(text, pattern, null);
+
+
+		System.out.println("Test : Error Case : Text is empty");
+		text = new ArrayList<>();
+		pattern = "srchNull";
+		testCasNaiveAlgo(text, pattern, null);
         
     }
 	
-    /**
-     * Tests a specific case of naiveAlgo() by comparing the obtained result with an expected result. (Corresponds to testCasAlgo)
-     * @param text - The text (ArrayList<Character>)
-     * @param pattern - The pattern (String)
-     * @param expected - The list of expected indices, now strictly an ArrayList<Integer>	
-     */
-    void testCasNaiveAlgo(ArrayList<Character> text, String pattern, ArrayList<Integer> expected) { 
-        ArrayList<Integer> resObtenu = naiveAlgo(text, pattern);
-        if (expected != null) { 
+	/**
+	* Tests a specific case of naiveAlgo()
+	* @param text - The text (ArrayList<Character>)
+	* @param pattern - The pattern (String)
+	* @param expected - The list of expected indices, now strictly an ArrayList<Integer>	
+	*/
+	void testCasNaiveAlgo(ArrayList<Character> text, String pattern, ArrayList<Integer> expected) { 
+		ArrayList<Integer> resObtenu = naiveAlgo(text, pattern);
+		if (expected != null) {
 			boolean succes = resObtenu.equals(expected);
 			
 			if (succes) {
@@ -161,11 +161,10 @@ class NaiveAlgo {
 	}
 		
 	/**
-	 * Efficacity Test of the Naive Algorithm()
+	 * Efficiency Test of the Naive Algorithm()
 	 */
 	void testNaiveAlgoEfficiency() {
-		//O(|t| x |m|)
-		 		
+
 		System.out.println("\n=== Efficacity Test of Naive Algorithm ===");
 		
 		// Normal Case : expected complexity O(n)
@@ -177,7 +176,7 @@ class NaiveAlgo {
 		long t1, t2, diffT;
 		double cptOverN;
 		
-		n = (int) Math.pow(10, 6); 
+		n = (int) Math.pow(10, 6);
 		
 		for (int i = 0; i < 6; i++) {
 			text = generateRandomText(n);
@@ -196,7 +195,7 @@ class NaiveAlgo {
 			cptOverN = (double)cpt / n;
 			System.out.println("cpt / n = " + cptOverN);
 			System.out.println("-----------------------------------");
-			n = n * 2;  
+			n = n * 2;
 		}
 		
 		// Worst Case : expected complexity O(n * m) with m the longer of the pattern 
@@ -226,13 +225,14 @@ class NaiveAlgo {
 			cptOverN = (double)cpt / (n * m);
 			System.out.println("cpt / (n * m) = " + cptOverN);
 			System.out.println("-----------------------------------");
-			n = n * 2; 	
+			n = n * 2;
 		}
 	}
 	
 	/**
 	 * Generates a random text of the specified size using uppercase letters (A-Z).
-	 * @param size - The number of characters to generate. Assumed to be a positive integer (>= 0).
+	 * This method is used to simulate the "normal case" scenario for the Naive algorithm
+	 * @param size - The number of characters to generate.
 	 * @return ArrayList<Character> - The generated random text containing characters from 'A' to 'Z'.
 	 */
 	ArrayList<Character> generateRandomText(int size) {
@@ -240,7 +240,7 @@ class NaiveAlgo {
 		
 		if (size >= 0) {
 			text = new ArrayList<>(size);
-			String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+			String alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 			
 			for (int i = 0; i < size; i++) {
 				int index = (int)(Math.random() * alphabet.length());
@@ -250,39 +250,46 @@ class NaiveAlgo {
 			System.err.println("generateRandomText(): Error: size negative");
 		}
 		
-        return text;
-    }
-    
-    void testGenerateRandomText() {
+		return text;
+	}
+	
+	/**
+	 * Tests of GenerateRandomText() 
+	 */
+	void testGenerateRandomText() {
 		System.out.println("\n--- Test of generateRandomText() ---");
 
 		int size;
 		
 		System.out.println("Test : Normal Case : Size positive");
-        size = 6;
-        testCasGenerateRepetitiveText(size);
-        
-        System.out.println("Test : Limit Case : Size equals zero");
-        size = 0;
-        testCasGenerateRepetitiveText(size);
-        
-        System.out.println("Test : Limit Case : Huge Size (will not be displayed)");
-        size = 10000;
-        testCasGenerateRepetitiveText(size);
-        
-        System.out.println("Test : Error Case : Negativ Size");
-        size = -5;
-        testCasGenerateRepetitiveText(size); 
+		size = 6;
+		testCasGenerateRandomText(size);
+
+		System.out.println("Test : Limit Case : Size equals zero");
+		size = 0;
+		testCasGenerateRandomText(size);
+
+		System.out.println("Test : Limit Case : Huge Size (will not be displayed)");
+		size = 10000;
+		testCasGenerateRandomText(size);
+
+		System.out.println("Test : Error Case : Negativ Size");
+		size = -5;
+		testCasGenerateRandomText(size);
 	}
 	
-	void testCasGenerateRepetitiveText(int size) {
+	/**
+	 * Tests a specific case of GenerateRandomText()
+	 * @param size - The number of characters to generate.
+	 */
+	void testCasGenerateRandomText(int size) {
 		ArrayList<Character> res = generateRandomText(size);
 		boolean success = false;
 		
 		if (res == null) {
 			if (size < 0) {
 				success = true;
-			} 
+			}
 		} else {
 			if (res.size() == size) {
 				success = true;
@@ -298,30 +305,88 @@ class NaiveAlgo {
 			System.err.println("Test failed\n");
 		}
 	}
-			
-		
-		
-		
-		
+
+
     /**
 	 * Generates a repetitive text of the specified size consisting only of the character 'A'.
 	 * This method is used to simulate the "worst case" scenario for the Naive algorithm
 	 * @param size - The number of characters to generate. Assumed to be a positive integer (>= 0).
 	 * @return ArrayList<Character> - The generated repetitive text filled with 'A's.
 	 */
-    ArrayList<Character> generateRepetitiveText(int size) {
+	ArrayList<Character> generateRepetitiveText(int size) {
 		ArrayList<Character> text = null;
-		
+
 		if (size >= 0) {
-		
+
 			text = new ArrayList<>(size);
-			
+
 			for (int i = 0; i < size; i++) {
-				text.add('A'); 
+				text.add('A');
 			}
 		} else {
 			System.err.println("generateRepetitiveText(): Error: size is negativ");
 		}
-        return text;
-    }
+		return text;
+	}
+	
+	/**
+	 * Tests of GenerateRepetitiveText() 
+	 */
+	void testGenerateRepetitiveText() {
+		System.out.println("\n--- Test of generateRepetitiveText() ---");
+
+		int size;
+
+		System.out.println("Test : Normal Case : Size positive");
+		size = 6;
+		testCasGenerateRepetitiveText(size);
+
+		System.out.println("Test : Limit Case : Size equals zero");
+		size = 0;
+		testCasGenerateRepetitiveText(size);
+ 
+		System.out.println("Test : Limit Case : Huge Size (will not be displayed)");
+		size = 10000;
+		testCasGenerateRepetitiveText(size);
+
+		System.out.println("Test : Error Case : Negativ Size");
+		size = -5;
+		testCasGenerateRepetitiveText(size);
+	}
+	
+	/**
+	 * Tests a specific case of GenerateRepetitiveText() 
+	 * @param size - The number of characters to generate
+	 */
+	void testCasGenerateRepetitiveText(int size) {
+		ArrayList<Character> res = generateRepetitiveText(size);
+		boolean success = false;
+		
+		if (res == null) {
+			if (size < 0) {
+				success = true;
+			} 
+		} else {
+			if (res.size() == size) {
+				success = true;
+				int i = 0;
+				while (i < size && success) { // verifying the content
+					if (res.get(i) != 'A') {
+						success = false;
+					}
+					i ++;
+				}
+				if (res.size() < 15) { // the goal is to display reasonable text size
+					System.out.println(res);
+				}
+			}
+		}
+		
+		if (success) {
+			System.out.println("Test successful\n");
+		} else {
+			System.err.println("Test failed\n");
+		}
+	}
+	
 }
