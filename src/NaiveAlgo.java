@@ -25,28 +25,28 @@ class NaiveAlgo {
 				if (pattern != null) {
 					if (pattern.length() > 0) {
 						if (pattern.length() <= text.size()) {
-							indices = new ArrayList<Integer>(); //2 op
-							int range = text.size() - pattern.length() + 1;
-							// 1 op		//1 op 		// 1 op		       // 1 op
-							boolean findPattern;//1 op
+							indices = new ArrayList<Integer>(); // 2 op
+							int range = text.size() - pattern.length() + 1; // 6 ops: counting .size() and .length() as 1 op each
+
+							boolean findPattern;// 1 op
 							int j; // 1 op
 							
-							for (int i = 0; i < range; i++) {
-								//2 op      // 1 op		// 2 op 
-								findPattern = true; // 1op
-								j = 0; // 1 op
-								while (j < pattern.length() && findPattern) {
-									   // j op					j op
+							// Total before loops 10 op
+							
+							for (int i = 0; i < range; i++) { // 3*X + 3 ops: (2 ops (int i=0) + 1*X (i < range) + 2*X (i++) + 1 op (last comparison))
+
+								findPattern = true; // 1 (per iteration)
+								j = 0; // 1 (per iteration)
+								while (j < pattern.length() && findPattern) { // 3*m + 3 ops (exit condition)
 									cpt ++;
-									if (text.get(i + j) != pattern.charAt(j)) {
-										//
-										findPattern= false; // 1 op
+									if (text.get(i + j) != pattern.charAt(j)) { // 2*m ops: 1 op (if) + 1 op (addition), not counting .charAt()
+										findPattern= false; // 1 op (potentially)
 									}
-									j ++; // 1 op
+									j ++; // 1
 								}
 								
 								if (findPattern) { // 1 op
-									indices.add(i + 1); // 1 op //respect de la convention
+									indices.add(i + 1); // 2 ops: 1 op (add) + 1 op (addition, following convention)
 								}
 							}
 						} else {
@@ -68,9 +68,9 @@ class NaiveAlgo {
 	}
 	
 	/**
-     * Tests of the Naive algorithm .
-     */ 
-    void testNaiveAlgo() {
+	* Tests of the Naive algorithm .
+	*/ 
+	void testNaiveAlgo() {
 		System.out.println("\n--- Test of naiveAlgo() ---");
 
 		ArrayList<Character> text;
@@ -143,7 +143,7 @@ class NaiveAlgo {
 			boolean succes = resObtenu.equals(expected);
 			
 			if (succes) {
-				System.out.println(resObtenu);
+				System.out.println("result: " + resObtenu);
 				System.out.println("Test successful for pattern \"" + pattern + "\" in " + text.toString() + "\n");
 			} else {
 		   
@@ -166,29 +166,30 @@ class NaiveAlgo {
 	void testNaiveAlgoEfficiency() {
 
 		System.out.println("\n=== Efficacity Test of Naive Algorithm ===");
-		
+
 		// Normal Case : expected complexity O(n)
 		System.out.println("\n=== Normal Case with Random text ===");
-		
+
 		ArrayList<Character> text;
 		String pattern = "ABC";
 		int n;
 		long t1, t2, diffT;
 		double cptOverN;
-		
+		int m = pattern.length();
 		n = (int) Math.pow(10, 6);
-		
+
 		for (int i = 0; i < 6; i++) {
 			text = generateRandomText(n);
 			
 			System.out.println("Length of the text n: " + n);
-			
+			System.out.println("Length of the pattern m: " + m + "(" + pattern + ")");
+
 			cpt = 0;
-			
+
 			t1 = System.currentTimeMillis();
 			naiveAlgo(text, pattern);
 			t2 = System.currentTimeMillis();
-			
+
 			diffT = t2 - t1;
 			System.out.println("Tps = " + diffT + " ms");
 			
@@ -197,33 +198,32 @@ class NaiveAlgo {
 			System.out.println("-----------------------------------");
 			n = n * 2;
 		}
-		
+
 		// Worst Case : expected complexity O(n * m) with m the longer of the pattern 
 		System.out.println("\n=== Worst Case with Repetitive text ===");
-		
+
 		String worstCasePattern = "AAAAB";
-		int m = worstCasePattern.length();
-		
+		m = worstCasePattern.length();
+
 		n = (int) Math.pow(10, 6);
-		
+
 		for (int i = 0; i < 6; i++) {
 			text = generateRepetitiveText(n);
 			
 			System.out.println("Length of the text n: " + n);
-			System.out.println("Length of the pattern m: " + m);
-			
-			
+			System.out.println("Length of the pattern m: " + m + "(" + worstCasePattern + ")");
+
 			cpt = 0;
-			
+
 			t1 = System.currentTimeMillis();
 			naiveAlgo(text, worstCasePattern);
 			t2 = System.currentTimeMillis();
-			
+
 			diffT = t2 - t1;
 			System.out.println("Tps = " + diffT + " ms");
-			
+
 			cptOverN = (double)cpt / (n * m);
-			System.out.println("cpt / (n * m) = " + cptOverN);
+			System.out.println("cpt / (n * m)= " + cptOverN);
 			System.out.println("-----------------------------------");
 			n = n * 2;
 		}

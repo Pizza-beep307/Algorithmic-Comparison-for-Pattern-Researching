@@ -29,45 +29,45 @@ class BoyerMooreAlgo {
 				if (pattern != null) {
 					if (pattern.length() > 0) {
 						if (pattern.length() <= text.size()) {
-							indices = new ArrayList<Integer>(); // 2 op
-							int n = text.size(); // 2 op
-							int m = pattern.length(); // 2 op
+							indices = new ArrayList<Integer>();
+							int n = text.size();
+							int m = pattern.length();
 							
 							// Bad Character Rule
-							int[] badCharArray = processBadChar(pattern); // m op // detemine la derniere position de chaque lettre
+							int[] badCharArray = processBadChar(pattern);// Precomputes the last occurrence of each character
 							
 							// Good Suffix Rule
-							int[] goodSuffixArray = processGoodSuffix(pattern); // m*m op
+							int[] goodSuffixArray = processGoodSuffix(pattern);
 							
-							int shift = 0; // placement au début du texte
+							int shift = 0; // Align pattern at the start of the text
 							
-							while (shift <= (n - m)) { // tant que ca ne dépasse pas la taille du texte
-								int j = m - 1; // on commence l'analyse à partir de la fin du motif
+							while (shift <= (n - m)) { // While the pattern stays within text bounds
+								int j = m - 1; // Start scanning from the rightmost character of the pattern
 								
 								// Scan from right to left
-								while (j >= 0 && pattern.charAt(j) == text.get(shift + j)) { // tant qu'on est dans le motif et que les lettres correspondent
+								while (j >= 0 && pattern.charAt(j) == text.get(shift + j)) { // While characters match (moving right to left)
 									cpt++; // Comparison successful
-									j--; // on recule vers la gauche
+									j--; // Move left
 								}
 								
 								if (j < 0) {
 									// Complete match found
-									indices.add(shift + 1); // on ajoute l'indice à la liste final
+									indices.add(shift + 1); // Add the found index (1-based) to the final list
 									
-									shift += goodSuffixArray[0]; // après la correspondance on décale le motif d'après la liste GoodSuffixe (0)
+									shift += goodSuffixArray[0]; // Shift pattern past the match using the Good Suffix rule
 									
 								} else {
 									// Case 2: Mismatch at index j
 									cpt++;
 									
 									// D1 Processing Bad Character
-									char textChar = text.get(shift + j); // La lettre du texte qui a bloqué
+									char textChar = text.get(shift + j); // The character in text causing the mismatch
 									int charCode;
 
 									if (textChar < 256) {
 										charCode = textChar;
 									} else {
-										charCode = 0; // Sécurité pour éviter de sortir du tableau
+										charCode = 0; // Safety check to prevent ArrayOutOfBoundsException
 									};
 									
 									int d1 = Math.max(1, j - badCharArray[charCode]);
@@ -75,10 +75,9 @@ class BoyerMooreAlgo {
 									// D2 Processing Good Suffix
 									int d2 = goodSuffixArray[j];
 									
-									shift += Math.max(d1, d2); // on choisit le maximum entre D1 et D2
+									shift += Math.max(d1, d2); // Shift by the maximum of the two results (Bad Char vs Good Suffix)
 								}
 							}
-							
 						} else {
 							System.err.println("boyerMooreAlgo(): Error: pattern is longer than the text");
 						}	
@@ -94,7 +93,7 @@ class BoyerMooreAlgo {
 		} else {
 			System.err.println("boyerMooreAlgo(): Error: text is null");
 		}
-		
+
 		return indices;
 	}
 
@@ -212,16 +211,19 @@ class BoyerMooreAlgo {
 				
 				for (int j = m - 1; j >= 0; j--) {
 					cpt++;
-					int suffixLen = m - 1 - j; // longueur du suffixe
+					int suffixLen = m - 1 - j; // Length of the suffix after mismatch at j
 					boolean found = false;
-					int shiftAmount = m; // on l'initialise à la longueur du pattern par défaut
+					int shiftAmount = m; // Default shift: whole pattern length
 					
-					if (suffixLen == 0) { // si le dernier caractère ne match pas, on avance de 1 direct
+					// Case 1: Mismatch at the last character (no suffix to match)
+					if (suffixLen == 0) { 
 						shiftAmount = 1;
 					} else {
 						String suffix = pattern.substring(j + 1);
-						char charBeforeSuffix = pattern.charAt(j);
+						char charBeforeSuffix = pattern.charAt(j); // The character that caused the mismatch within the pattern
 						
+						// Case 2: Search for another occurrence of the suffix in the pattern
+						// It must not be preceded by the same character 'charBeforeSuffix'
 						int k = m - 2;
 						while (k >= suffixLen - 1 && !found) {
 							cpt++;
@@ -234,6 +236,7 @@ class BoyerMooreAlgo {
 								if (start - 1 >= 0) {
 									charBeforeSub = pattern.charAt(start - 1);
 								}
+								// "Strong" Good Suffix Rule: check preceding character
 								if (start == 0 || charBeforeSub != charBeforeSuffix) {
 									shiftAmount = (m - 1) - k;
 									found = true;
@@ -241,13 +244,14 @@ class BoyerMooreAlgo {
 							}
 							k--;
 						}
-						
+						// Case 3: Search for a suffix that matches a prefix of the pattern
 						if (!found) {
 							int p = 1;
 							while (p < m && !found) {
-								cpt++;
+				
 								int len = m - p;
 								if (len < suffixLen) {
+									// Check if the end of pattern matches the start of pattern
 									boolean prefixMatch = true;
 									int i = 0;
 									while (i < len && prefixMatch) {
@@ -411,15 +415,16 @@ class BoyerMooreAlgo {
 		
 		ArrayList<Character> text;
 		String pattern = "ABCDE";
-		int n;
+		int n, m;
 		long t1, t2, diffT;
 		double cptOverN;
 		
 		n = (int) Math.pow(10, 6);
-		
+		m = pattern.length();
 		for (int i = 0; i < 6; i++) {
 			text = generateRandomText(n);
 			System.out.println("Length of the text n: " + n);
+			System.out.println("Length of the pattern m: " + m + "(" + pattern + ")");
 			
 			cpt = 0;
 			t1 = System.currentTimeMillis();
@@ -429,8 +434,8 @@ class BoyerMooreAlgo {
 			diffT = t2 - t1;
 			System.out.println("Tps = " + diffT + " ms");
 			
-			cptOverN = (double)cpt / n;
-			System.out.println("cpt / n = " + cptOverN);
+			cptOverN = (double)cpt / (n / m);
+			System.out.println("cpt / (n / m)= " + cptOverN);
 			System.out.println("-----------------------------------");
 			n = n * 2;
 		}
@@ -438,13 +443,14 @@ class BoyerMooreAlgo {
 		System.out.println("\n=== Worst Case with Repetitive text ===");
 		
 		String worstCasePattern = "BAAAA";
-		int m = worstCasePattern.length();
+		m = worstCasePattern.length();
 		
 		n = (int) Math.pow(10, 6);
 		
 		for (int i = 0; i < 6; i++) {
 			text = generateRepetitiveText(n);
 			System.out.println("Length of the text n: " + n);
+			System.out.println("Length of the pattern m: " + m + "(" + worstCasePattern + ")");
 			
 			cpt = 0;
 			t1 = System.currentTimeMillis();
@@ -454,8 +460,8 @@ class BoyerMooreAlgo {
 			diffT = t2 - t1;
 			System.out.println("Tps = " + diffT + " ms");
 			
-			cptOverN = (double)cpt / (n * m);
-			System.out.println("cpt / (n * m) = " + cptOverN);
+			cptOverN = (double)cpt / (n + m);
+			System.out.println("cpt / (n + m) = " + cptOverN);
 			System.out.println("-----------------------------------");
 			n = n * 2; 	
 		}
